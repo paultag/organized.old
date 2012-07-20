@@ -4,6 +4,6 @@
 {% block main %}
     <h1>Projects</h1>
 {% for project in projects %}
-    <a href = '/project/{{ project.name }}'>{{ project.name }}</a>
+    <a href = '/project/{{ project._id }}'>{{ project._id }}</a>
 {% endfor %}
 {% endblock %}

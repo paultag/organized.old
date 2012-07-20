@@ -1,0 +1,13 @@
+{
+    "_id": "gh-milestone-sunlightlabs-billy-3",
+    "_project": "billy",
+    "created_at": "ISODate",
+    "creator": {
+        "login": "jamesturk",
+    },
+    "description": "the major release after beta, the nice-to-haves that didn't make the cut",
+    "due_on": "ISODate",
+    "state": "open",
+    "title": "1.4",
+    "url": "https://api.github.com/repos/sunlightlabs/billy/milestones/3"
+}

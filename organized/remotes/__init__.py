@@ -48,13 +48,13 @@ class Remote(object):
     def ping_project(self):
         # slight mangle
         project = {
-            "name": self._project,
+            "_id": self._project,
             "ping": dt.datetime.now()
         }
         db.projects.update(
             {"_id": self._project},
             project,
-            True,
+            True,  # Upsert.
             safe=True)
 
     def save_milestone(self, milestone):

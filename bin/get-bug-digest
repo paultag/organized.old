@@ -1,0 +1,5 @@
+#!/usr/bin/env python
+
+from organized.burndown import generate_daily_bugs
+
+print generate_daily_bugs('openstates')

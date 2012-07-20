@@ -5,6 +5,6 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG)
 
-g = GitHub('sunlightlabs', 'openstates')
-g.project('openstates')
+g = GitHub('sunlightlabs', 'billy')
+g.project('billy')
 g.update()

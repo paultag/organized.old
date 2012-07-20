@@ -3,6 +3,12 @@
     <head>
         <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/dewebstrap.css') }}"/>
         <title>{% block title %}{% endblock %}</title>
+        <style>
+            {% block css %}
+            {% endblock %}
+        </style>
+        {% block js %}
+        {% endblock %}
     </head>
     <body>
         <div class = 'heading' >

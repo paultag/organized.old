@@ -1,4 +1,5 @@
 #
+import datetime as dt
 from organized.remotes import Remote
 import logging
 import json
@@ -7,6 +8,30 @@ logger = logging.getLogger('organized')
 
 API_BASE = "https://api.github.com"
 PREFIX = "gh"
+
+def gh_issue_id(user, repo, number):
+    return "%s-issue-%s-%s-%s" % (
+        PREFIX,
+        user,
+        repo,
+        number
+    )
+
+def gh_milestone_id(user, repo, number):
+    return "%s-milestone-%s-%s-%s" % (
+        PREFIX,
+        user,
+        repo,
+        number
+    )
+
+def parse_time(time):
+    if time is None:
+        return None
+
+    time = dt.datetime.strptime( time, "%Y-%m-%dT%H:%M:%SZ" )
+    return time
+
 
 class GitHub(Remote):
 
@@ -46,45 +71,79 @@ class GitHub(Remote):
         return data
 
     def _update(self):
-        logger.info("fetching open issues")
-        issues = self.get_bugs_for(state='open')
-        logger.info("fetching closed issues")
-        issues += self.get_bugs_for(state='closed')
+        def update_issues(**kwargs):
+            logger.info("fetching issues")
+            issues = self.get_bugs_for(**kwargs)
+            count = 0
+            issue_migration = {
+                "assignee": "owner",
+                "labels": "tags",
+                "user": "reporter"
+            }
+            for issue in issues:
+                eye_dee = gh_issue_id(
+                    self.user,
+                    self.repo,
+                    issue['number']
+                )
+                for mig in issue_migration:
+                    issue[issue_migration[mig]] = issue[mig]
+                    del(issue[mig])
+                issue['_id'] = eye_dee
 
-        issue_migration = {
-            "assignee": "owner",
-            "labels": "tags",
-            "user": "reporter"
-        }
+                if issue['milestone'] != None:
+                    real_milestone = gh_milestone_id(
+                        self.user,
+                        self.repo,
+                        issue['milestone']['number'])
+                    issue['_milestone'] = real_milestone
+                else:
+                    issue['_milestone'] = None
 
-        for issue in issues:
-            eye_dee = "%s-issue-%s-%s-%s" % (
-                PREFIX,
-                self.user,
-                self.repo,
-                issue['number']
-            )
+                for field in [ 'created_at', 'closed_at', 'updated_at' ]:
+                    issue[field] = parse_time(issue[field])
 
-            for mig in issue_migration:
-                issue[issue_migration[mig]] = issue[mig]
-                del(issue[mig])
+                self.save_issue(issue)
+                count += 1
+            return count
 
-            issue['_id'] = eye_dee
-            self.save_issue(issue)
+        def update_milestones(**kwargs):
+            logger.info("fetching milestones")
+            milestones = self.get_milestones_for(**kwargs)
+            count = 0
+            for milestone in milestones:
+                eye_dee = gh_milestone_id(
+                    self.user,
+                    self.repo,
+                    milestone['number']
+                )
+                milestone['_id'] = eye_dee
 
-        logger.info("fetching open milestones")
-        milestones = self.get_milestones_for(state='open')
-        logger.info("fetching closed milestones")
-        milestones += self.get_milestones_for(state='closed')
+                for field in [ 'created_at', 'due_on' ]:
+                    milestone[field] = parse_time(milestone[field])
 
-        for milestone in milestones:
-            eye_dee = "%s-milestone-%s-%s-%s" % (
-                PREFIX,
-                self.user,
-                self.repo,
-                milestone['number']
-            )
-            milestone['_id'] = eye_dee
-            self.save_milestone(milestone)
+                self.save_milestone(milestone)
+                count += 1
+            return count
+
+        for status in [ 'open', 'closed' ]:
+            ret_issues = -1
+            ret_milestones = -1
+
+            n = 1
+            while ret_issues != 0:
+                logger.info("Page %s" % ( n ))
+                ret_issues = update_issues(
+                    state=status,
+                    page=n)
+                n += 1
+
+            n = 1
+            while ret_milestones != 0:
+                logger.info("Page %s" % ( n ))
+                ret_milestones = update_milestones(
+                    state=status,
+                    page=n)
+                n += 1
 
         self.ping_project()

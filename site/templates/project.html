@@ -1,8 +1,16 @@
 {% extends "base.html" %}
 
 {% block title %}{{ project }}{% endblock %}
+
+{% block js %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/d3.v2.js') }}" /></script>
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
 {% block main %}
 {% for milestone in milestones %}
-    {{ milestone }}
+    <a href = '/project/{{project}}/{{milestone._id}}' >{{ milestone.title }}</a>
 {% endfor %}
 {% endblock %}

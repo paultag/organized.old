@@ -1,0 +1,26 @@
+{
+    "_id": "gh-issue-sunlightlabs-openstates-387",
+    "_milestone": null,
+    "_project": "openstates",
+    "body": "don't know if its possible to add legislator urls\n\nhttp://www.rilin.state.ri.us/Ajello/\nhttp://www.rilin.state.ri.us/Ajello/rep.html",
+    "closed_at": null,
+    "created_at": "ISODate()",
+    "owner": {
+        "name": "login"
+    },
+    "reporter": {
+        "login": "login"
+    },
+    "state": "open",
+    "tags": [
+        {
+            "name": "priority.normal"
+        },
+        {
+            "name": "state.ri"
+        }
+    ],
+    "title": "RI: legislator url",
+    "updated_at": "",
+    "url": "https://github.com/sunlightlabs/openstates/issues/387"
+}
