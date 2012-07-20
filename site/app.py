@@ -3,17 +3,33 @@
 # with the source of this application.
 
 from flask import Flask, render_template, request
-from organized import db
+from organized.db import db
 
 app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return render_template('index.html', **{})
+    projects = db.projects.find({})
 
-@app.route("/about")
-def about():
-    return render_template('about.html', **{})
+    return render_template('index.html', **{
+        "projects": projects
+    })
+
+@app.route("/project/<project>")
+def project(project=None):
+    milestones = db.milestones.find({"_project": project})
+
+    return render_template('project.html', **{
+        "milestones": milestones
+    })
+
+@app.route("/project/<project>/<milestone>")
+def milestone(project=None, milestone=None):
+    issues = db.issues.find({"_milestone": milestone})
+
+    return render_template('milestone.html', **{
+        "issues": issues
+    })
 
 if __name__ == "__main__":
     app.debug = True
