@@ -87,3 +87,4 @@ class GitHub(Remote):
             milestone['_id'] = eye_dee
             self.save_milestone(milestone)
 
+        self.ping_project()

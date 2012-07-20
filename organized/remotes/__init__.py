@@ -4,6 +4,8 @@ import logging
 import urllib2
 import urllib
 
+import datetime as dt
+
 logger = logging.getLogger('organized')
 
 class Remote(object):
@@ -40,6 +42,18 @@ class Remote(object):
         db.issues.update(
             {"_id": issue['_id']},
             issue,
+            True,
+            safe=True)
+
+    def ping_project(self):
+        # slight mangle
+        project = {
+            "name": self._project,
+            "ping": dt.datetime.now()
+        }
+        db.projects.update(
+            {"_id": self._project},
+            project,
             True,
             safe=True)
 

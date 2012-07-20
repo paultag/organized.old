@@ -3,6 +3,8 @@
 # with the source of this application.
 
 from flask import Flask, render_template, request
+from organized import db
+
 app = Flask(__name__)
 
 @app.route("/")
