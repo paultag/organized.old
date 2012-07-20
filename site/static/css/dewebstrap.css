@@ -1,0 +1,16 @@
+html,body{padding:0px;margin:0px;background-color:#ececec;font-family:Corbel,"Lucida Grande","Lucida Sans Unicode","Lucida Sans","DejaVu Sans","Bitstream Vera Sans","Liberation Sans",Verdana,"Verdana Ref",sans-serif;}
+h1{font-size:1.8em;}
+h2{font-size:1.3em;}
+h3{font-size:1.1em;}
+.heading{background-color:#3e3e3e;color:#ececec;min-height:120px;}
+.pad{padding:20px 70px;}
+.content{width:800px;margin-left:auto;margin-right:auto;}
+#logo{height:80px;float:left;}
+.slug{float:left;height:80px;line-height:80px;vertical-align:middle;margin-left:30px;text-transform:uppercase;font-weight:bold;}
+.nav{height:80px;line-height:80px;float:right;vertical-align:middle;}.nav ul{text-transform:uppercase;font-size:1em;letter-spacing:0.03em;font-weight:bold;padding:0px;margin:0px;}.nav ul li{padding:0px;margin:0px;list-style:none;display:inline;padding-left:15px;}.nav ul li a{color:#a0a0a0;text-decoration:none;}
+.nav ul li a:hover{color:#a7d660;}
+.nav ul li a:active{color:#a7d660;}
+.main{font-size:0.9em;min-height:500px;background-color:#ffffff;box-shadow:0 0 15px rgba(0, 0, 0, 0.2);-webkit-box-shadow:0 0 15px rgba(0, 0, 0, 0.2);-moz-box-shadow:0 0 15px rgba(0, 0, 0, 0.2);padding-bottom:50px;}.main h1{text-transform:uppercase;width:100%;text-align:right;}
+footer{margin-top:10px;font-size:0.7em;color:#868686;margin-bottom:40px;}
+.clear{clear:both;}
+code,pre{font-family:Consolas,"Andale Mono WT","Andale Mono","Lucida Console","Lucida Sans Typewriter","DejaVu Sans Mono","Bitstream Vera Sans Mono","Liberation Mono","Nimbus Mono L",Monaco,"Courier New",Courier,monospace;background-color:#333333;color:#ffffff;padding:10px;margin:25px;border:1px solid #b3b3b3;box-shadow:0 0 15px rgba(0, 0, 0, 0.2);-webkit-box-shadow:0 0 15px rgba(0, 0, 0, 0.2);-moz-box-shadow:0 0 15px rgba(0, 0, 0, 0.2);border-radius:5px;-webkit-border-radius:5px;-moz-border-radius:5px;}
