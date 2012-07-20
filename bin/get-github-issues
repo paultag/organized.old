@@ -1,0 +1,10 @@
+#!/usr/bin/env python
+
+from organized.remotes.github import GitHub
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+
+g = GitHub('sunlightlabs', 'openstates')
+g.project('openstates')
+g.update()
