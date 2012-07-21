@@ -5,13 +5,115 @@
 {% block js %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/d3.v2.js') }}" /></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.7.2.js') }}" /></script>
+    <script type="text/javascript" >
+$(document).ready(function() {
+    d3.csv("/csv/issues/{{project}}", function(obj) {
+        var data = [],
+            minIssues = null,
+            maxIssues = null;
+
+        for ( var i = 0; i < obj.length; ++i ) {
+            var count = parseInt(obj[i]['bugcount']);
+
+            function parseDate(input) {
+                var parts = input.match(/(\d+)/g);
+                return new Date(parts[0], parts[1]-1, parts[2]);
+            }
+            data.push({
+                "x": parseDate(obj[i]['week']),
+                "y": count
+            });
+
+            if ( count > maxIssues || maxIssues === null ) {
+                maxIssues = count;
+            }
+            if ( count < minIssues || minIssues === null ) {
+                minIssues = count;
+            }
+
+        }
+
+        var margin = {top: 10, right: 10, bottom: 20, left: 40},
+            width  = 600 - margin.left - margin.right,
+            height = 300 - margin.top  - margin.bottom,
+            minDate = data[0]['x'],
+            maxDate = data[data.length - 1]['x'];
+
+        var x = d3.time.scale()
+            .domain([minDate, maxDate])
+            .range([0, width]);
+
+        var y = d3.scale.linear()
+            .domain([minIssues, maxIssues])
+            .range([height, 0]);
+
+        var xAxis = d3.svg.axis()
+            .scale(x)
+            .orient("bottom");
+
+        var yAxis = d3.svg.axis()
+            .scale(y)
+            .orient("left");
+
+        var line = d3.svg.line()
+            .x(function(d) { return x(d.x); })
+            .y(function(d) { return y(d.y); });
+
+        var svg = d3.select("#graph").append("svg")
+            .datum(data)
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+
+        svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis);
+
+        svg.append("path")
+            .attr("class", "line")
+            .attr("d", line);
+
+        svg.selectAll(".dot")
+            .data(data)
+          .enter().append("circle")
+            .attr("class", "dot")
+            .attr("cx", line.x())
+            .attr("cy", line.y())
+            .attr("r", 3.5);
+    });
+});
+    </script>
 {% endblock %}
 
 {% block css %}
+.axis path, .axis line {
+    fill:            none;
+    stroke:          #000000;
+    shape-rendering: crispEdges;
+}
+
+.line {
+    fill:         none;
+    stroke:       steelblue;
+    stroke-width: 1.5px;
+}
+
+.dot {
+    fill:         white;
+    stroke:       steelblue;
+    stroke-width: 1.5px;
+}
 {% endblock %}
 
 {% block main %}
-{% for milestone in milestones %}
+{# {% for milestone in milestones %}
     <a href = '/project/{{project}}/{{milestone._id}}' >{{ milestone.title }}</a>
-{% endfor %}
+{% endfor %} #}
+<div id = 'graph' ></div>
 {% endblock %}
