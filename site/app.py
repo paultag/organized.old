@@ -17,22 +17,29 @@ def index():
         "projects": projects
     })
 
-@app.route("/project/<project>")
-def project(project=None):
+@app.route("/project/<project>/")
+@app.route("/project/<project>/<milestone>")
+def project(project=None, milestone=None):
     milestones = db.milestones.find({"_project": project})
 
     return render_template('project.html', **{
         "project": project,
+        "milestone": milestone,
         "milestones": milestones
     })
 
 @app.route("/csv/issues/<project>")
-def csv_project(project=None):
+@app.route("/csv/issues/<project>/<milestone>")
+def csv_project(project=None, milestone=None):
     total = 0
     totals = {}
     buf = "week,bugcount,closed,opened\n"
 
-    (keys, values) = generate_daily_bugs(project)
+    kwargs = {}
+    if not milestone is None:
+        kwargs['_milestone'] = milestone
+
+    (keys, values) = generate_daily_bugs(project, **kwargs)
     for key in keys:
         closed, opened = values[key]
         total += opened
@@ -44,14 +51,6 @@ def csv_project(project=None):
             opened
         )
     return buf
-
-@app.route("/project/<project>/<milestone>")
-def milestone(project=None, milestone=None):
-    issues = db.issues.find({"_milestone": milestone})
-
-    return render_template('milestone.html', **{
-        "issues": issues
-    })
 
 if __name__ == "__main__":
     app.debug = True

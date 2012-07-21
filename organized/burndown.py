@@ -28,8 +28,15 @@ def twixt_dates(start_date, end_date):
         )
 
 
-def generate_daily_bugs(project):
-    issues = db.issues.find({ "_project": project }).sort('created_at',  1)
+def generate_daily_bugs(project, **kwargs):
+    spec = kwargs
+    spec.update({ "_project": project })
+
+    issues = db.issues.find(spec).sort('created_at',  1)
+
+    if issues.count() == 0:
+        return ([], {})
+
     start_date = issues[0]['created_at']
     ret = defaultdict(list)
     for issue in issues:

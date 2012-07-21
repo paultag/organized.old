@@ -7,7 +7,11 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.7.2.js') }}" /></script>
     <script type="text/javascript" >
 $(document).ready(function() {
-    d3.csv("/csv/issues/{{project}}", function(obj) {
+        {% if milestone != None %}
+            d3.csv("/csv/issues/{{project}}/{{milestone}}", function(obj) {
+        {% else %}
+            d3.csv("/csv/issues/{{project}}", function(obj) {
+        {% endif %}
         var data = [],
             minIssues = null,
             maxIssues = null;
@@ -112,8 +116,9 @@ $(document).ready(function() {
 {% endblock %}
 
 {% block main %}
-{# {% for milestone in milestones %}
+<a href = '/project/{{project}}'>{{ project }}</a><br />
+{% for milestone in milestones %}
     <a href = '/project/{{project}}/{{milestone._id}}' >{{ milestone.title }}</a>
-{% endfor %} #}
+{% endfor %}
 <div id = 'graph' ></div>
 {% endblock %}
